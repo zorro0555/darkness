@@ -2,12 +2,15 @@
 // Storing the Trello colors as variables for ease of use
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 
-// For some reason, some things have to me re-inverted
-.body-dark-board-background{
+// For some reason, some things have to be re-inverted
+.body-dark-board-background,
+.body-light-board-background,
+.body-gray-board-background{
 	.boards-drawer {
 		background-color: invert-back-color($theme-background-toolbar) !important;
 	}
 	.board-drawer-content,
+	.pop-over,
 	.window-overlay,
 	#surface {
 		@include invert-back();
@@ -107,6 +110,24 @@ input, textarea {
 // links
 a:visited {
 	color: $theme-link !important;
+}
+
+// The homepage when logged in
+.up-next-card-list-item > div, .dhmfCv {
+	background: $theme-background-box !important;
+}
+.sc-VigVT .sc-bxivhb, 
+.sc-gqjmRU .sc-gZMcBi {
+	@include invert-back();
+}
+.home-activity .atMention.me {
+	color: $theme-highlighted !important;
+}
+.board-tile[style*="background-image:"] .board-tile-details-name {
+	color: invert-back-color($theme-highlighted) !important;
+}
+.board-tile-details-name {
+	color: $theme-highlighted !important;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
