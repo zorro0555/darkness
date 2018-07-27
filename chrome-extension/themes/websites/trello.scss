@@ -12,7 +12,8 @@
 	.board-drawer-content,
 	.pop-over,
 	.window-overlay,
-	#surface {
+	#surface,
+	.is-due-past {
 		@include invert-back();
 	}
 }
@@ -94,6 +95,14 @@ a.job-listing{
 .js-star-board {
 	@include invert-back();
 }
+.dialog-close-button,
+.dialog-close-button span,
+.visibility-filter span,
+.visibility-filter {
+	background: transparent !important;
+	background-color: transparent !important;
+	color: $theme-button-background !important;
+}
 
 // Login with google
 #google-link, #google {
@@ -113,13 +122,18 @@ a:visited {
 }
 
 // The homepage when logged in
-.up-next-card-list-item > div, .dhmfCv {
+.body-tabbed-page,
+.member-boards-view, 
+.member-boards-view.super-home {
+	background: $theme-background !important;
+}
+.up-next-card-list-item > div, .dhmfCv, .hiqYnm {
 	background: $theme-background-box !important;
 }
-.sc-VigVT .sc-bxivhb, 
-.sc-gqjmRU .sc-gZMcBi {
+.canonical-comment > div > div > span {
 	@include invert-back();
 }
+.up-next-card-list-item .atMention.me,
 .home-activity .atMention.me {
 	color: $theme-highlighted !important;
 }
@@ -128,6 +142,24 @@ a:visited {
 }
 .board-tile-details-name {
 	color: $theme-highlighted !important;
+}
+.canonical-stretch {
+	@include invert-back();
+}
+.canonical-stretch .sc-bxivhb {
+	@include invert-back();
+}
+.cMpGUA > * {
+	@include invert-back();
+}
+.canonical-comment > div {
+	background: $theme-background-box !important;
+}
+.cXkHdx .sc-ifAKCX {
+	@include invert-back();
+}
+.home-left-sidebar-container .home-tab-container .home-tab.selected {
+	background: $theme-highlighted !important;
 }
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------

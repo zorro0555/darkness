@@ -14,6 +14,7 @@ if (!DarknessSettingsLoader) {
 		var PRINT_LOGS = (ENVIRONMENT != 'production') || document.location.href.indexOf('debug_darkness=1') > -1;
 		var CONFIG = JSON.parse('@@CONFIG@@');
 		var MACHINE_ID = '@@MACHINEID@@';
+		var BROWSER = (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) ? 'firefox' : 'chrome';
 
 		// Currently shown theme & site keys
 		var THEME = '@@THEME@@';
@@ -175,7 +176,7 @@ if (!DarknessSettingsLoader) {
 			var now = new Date();
 			var transactionId = 'tid_' + now.getFullYear() + '_' + ('0'+(now.getMonth()+1)).slice(-2) + '_' + now.getDate();
 			if (ENVIRONMENT != 'production') transactionId += '_n' + Math.floor(Math.random()*10000);
-			var custom = { dialog_reason: dialogReason, theme: THEME, site: SITE, machine_id: MACHINE_ID, transaction_id: transactionId };
+			var custom = { dialog_reason: dialogReason, theme: THEME, site: SITE, browser: BROWSER, machine_id: MACHINE_ID, transaction_id: transactionId };
 			$('#drk_paypal_custom').attr('value', JSON.stringify(custom));
 
 			// Hide upgrade dialog, and show "waiting" dialog instead
@@ -290,7 +291,7 @@ if (!DarknessSettingsLoader) {
 						}, 2500);
 					} else {
 						$dialog.find('.drk_promo_submit').val('Send');
-						var msg = "Error sending promo to server:\n\n" + res.error + "\n\nPlease copy this message and send it to support@lifehacklabs.org";
+						var msg = "Error sending promo to server:\n\n" + res.error + "\n\nPlease copy this message and send it to support@darkness.app";
 						alert(msg);
 					}
 				}
@@ -467,7 +468,7 @@ if (!DarknessSettingsLoader) {
 			document.head.appendChild(s);
 		};
 
-		// Append or replace the HTML in the BODY with ASSETS.HTML
+		// Append or replace the HTML in the BODY with the HTML provided directly from the background script
 		var putHtmlInBody = function() {
 			var prev = document.getElementById(ID_SETTINGS_HTML);
 			if (prev) {
@@ -552,6 +553,15 @@ if (!DarknessSettingsLoader) {
 				$('.drk_skin_contributors_line').addClass('visible');
 			} else {
 				$('.drk_skin_contributors_line').removeClass('visible');
+			}
+
+			// CTA for developers
+			if (siteInfo.siteForDevelopers) {
+				$('.drk_developer_add .text').html("Developer? Get all Darkness Pro features");
+				$('.drk_developer_add').addClass('drk_bold');
+			} else {
+				$('.drk_developer_add .text').html("Developer? Add skins to more websites");
+				$('.drk_developer_add').removeClass('drk_bold');
 			}
 
 			// Show/hide youtube theme
@@ -660,11 +670,13 @@ if (!DarknessSettingsLoader) {
 			// Send skin bug report button
 			$('.drk_settings .drk_bug_report_btn').unbind('click').click(function() {
 				repEventByUser('user-action', 'bug-report-btn-click');
-				var to = 'Lifehack Labs Support <support@lifehacklabs.org>';
+				var to = 'Darkness Support <support@darkness.app>';
 				var subj = 'Darkness Bug Report';
 				var body = '[Please send your bug report in English]\n\n________\nSystem Information:\nDarkness Version: ' +
-					chrome.runtime.getManifest().version +
-					(ASSETS.TYPE == 'p' ? '[2]' : '[1]') + '\nCurrent Website: ' + SITE + '\nCurrent URL: ' + document.location.href +
+					chrome.runtime.getManifest().version + (ASSETS.TYPE == 'p' ? '[2]' : '[1]') +
+					"\nBrowser: " + navigator.userAgent +
+					'\nCurrent Website: ' + SITE + 
+					'\nCurrent URL: ' + document.location.href +
 					'\nCurrent Theme: ' + THEME;
 				var url = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + encodeURIComponent(subj) +
 					'&body=' +
@@ -676,14 +688,16 @@ if (!DarknessSettingsLoader) {
 			// Send feedback button
 			$('.drk_settings .drk_feedback_btn').unbind('click').click(function(e) {
 				repEventByUser('user-action', 'feedback-btn-click');
-				var to = 'Lifehack Labs Support <support@lifehacklabs.org>';
+				var to = 'Darkness Support <support@darkness.app>';
 				var subj = 'Darkness Feedback';
 				if (e.altKey) {
 					subj = 'Darkness System Report';
 				}
 				var body = '[Please send your feedback in English]\n\n________\nSystem Information (for bug reports):\nDarkness Version: ' +
-					chrome.runtime.getManifest().version +
-					(ASSETS.TYPE == 'p' ? '[2]' : '[1]') + '\nCurrent Website: ' + SITE + '\nCurrent URL: ' + document.location.href +
+					chrome.runtime.getManifest().version + (ASSETS.TYPE == 'p' ? '[2]' : '[1]') +
+					"\nBrowser: " + navigator.userAgent +
+					'\nCurrent Website: ' + SITE + 
+					'\nCurrent URL: ' + document.location.href +
 					'\nCurrent Theme: ' + THEME;
 				if (e.altKey) {
 					body += '\n\n________\nDebugging Information:\n' + JSON.stringify(settings);
@@ -699,7 +713,7 @@ if (!DarknessSettingsLoader) {
 			// Privacy policy button
 			$('.drk_settings .drk_privacy_btn').unbind('click').click(function(e) {
 				repEventByUser('user-action', 'feedback-privacy-click');
-				var url = 'http://lifehacklabs.org/darkness/darkness-privacy-policy.pdf';
+				var url = 'https://darkness.app/privacy/darkness-privacy-policy.pdf';
 				var win = window.open(url, '_blank');
 				win.focus();
 			});
@@ -821,7 +835,7 @@ if (!DarknessSettingsLoader) {
 			});
 			// Upgrade dialog -> Got promo?
 			$('.drk_show_feature_comparison').unbind('click').click(function(e) {
-				var url = "http://lifehacklabs.org/darkness/pro";
+				var url = "https://darkness.app/upgrade/";
 				var win = window.open(url, '_blank');
 			});
 
@@ -877,7 +891,7 @@ if (!DarknessSettingsLoader) {
 					buyClick();
 				} else {
 					// PayPal AND Google failed? Send a support email
-					var to = 'Lifehack Labs Support <support@lifehacklabs.org>';
+					var to = 'Darkness Support <support@darkness.app>';
 					var paymentMethodName = PAYMENT_PLATFORM == 'paypal' ? 'PayPal' : 'Google Payment';
 					var subj = 'Problem paying with ' + paymentMethodName;
 					var body =
@@ -995,6 +1009,11 @@ if (!DarknessSettingsLoader) {
 					loadSettingsPanelEventHandlers();
 					loadUpgradeDialogEventHandlers();
 					loadOtherDialogsEventHandlers();
+
+					if ($('body').attr('drk-on-start') == 'upgrade-dialog') {
+						console.log('Loading upgrade dialog on start');
+						$('.drk_settings .drk_upgrade_btn').trigger('click');
+					}
 
 					if (onlyAskDevelopers) {
 						// Show the developers dialog

@@ -5,10 +5,16 @@ var ENVIRONMENT = 'development';
 
 // Important - don't touch this:
 if (chrome.runtime.id == 'imilbobhamcfahccagbncamhpnbkaenm') ENVIRONMENT = 'production'; // Chrome Web Store version
+if (chrome.runtime.id == 'darkness@darkness.app') ENVIRONMENT = 'production'; // Firefox Add-on Store version
 
-// Local testing versions
-if (chrome.runtime.id == 'koobfbhnpdijhobcdllfkmlgngbpgjep') ENVIRONMENT = 'development'; // Local version (development)
-if (chrome.runtime.id == 'blbbhmfjigkmkkobabbgppbhaaeehfjn') ENVIRONMENT = 'staging'; // Local testing version before deploying (staging)
+// Development version
+if (chrome.runtime.id == 'koobfbhnpdijhobcdllfkmlgngbpgjep') ENVIRONMENT = 'development';
+if (chrome.runtime.id == 'development@darkness.app') ENVIRONMENT = 'development';
+
+// Staging (local testing before depoyment to stores)
+if (chrome.runtime.id == 'blbbhmfjigkmkkobabbgppbhaaeehfjn') ENVIRONMENT = 'staging';
+if (chrome.runtime.id == 'staging@darkness.app') ENVIRONMENT = 'staging';
+
 
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Global vars
@@ -20,6 +26,13 @@ var stats; // An object with user stats (e.g. install time, install version)
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 // Helper functions
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Get browser name
+// Returns either 'chrome' or 'firefox'
+const getBrowser = function() {
+	return (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) ? 'firefox' : 'chrome';
+}
+
 // Get tab name: helper method for debug prints
 var getTabName = function(tab) {
 	return '"' + tab.url.substr(0, 35).replace('https://', '').replace('http://', '') + '...' + '"';
